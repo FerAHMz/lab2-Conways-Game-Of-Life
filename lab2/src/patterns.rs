@@ -1,13 +1,11 @@
 use crate::game_of_life::GameOfLife;
 
-// Coloca un patrón sin escalar en una posición
 fn place_pattern(game: &mut GameOfLife, coords: &[(usize, usize)], offset_x: usize, offset_y: usize) {
     for &(x, y) in coords {
         game.set_alive(x + offset_x, y + offset_y);
     }
 }
 
-// Coloca un patrón escalado (cada celda viva se convierte en bloque scale×scale)
 fn place_scaled(game: &mut GameOfLife, pattern: &[(usize, usize)], offset_x: usize, offset_y: usize, scale: usize) {
     for &(x, y) in pattern {
         let sx = x * scale;
@@ -20,7 +18,6 @@ fn place_scaled(game: &mut GameOfLife, pattern: &[(usize, usize)], offset_x: usi
     }
 }
 
-// Carga múltiples patrones distribuidos por pantalla
 pub fn load_all_patterns(game: &mut GameOfLife) {
     let glider = [(1, 0), (2, 1), (0, 2), (1, 2), (2, 2)];
     let block = [(0, 0), (1, 0), (0, 1), (1, 1)];
@@ -57,13 +54,24 @@ pub fn load_all_patterns(game: &mut GameOfLife) {
         (1,0), (2,0), (3,0), (4,0),
         (0,1), (4,1),
         (4,2),
-        (0,3), (3,2), (1,3), (2,3), (3,3), (4,3),
+        (0,3), (1,3), (2,3), (3,3), (4,3), (3,2),
+    ];
+    let glider_gun = [
+        (24, 0),
+        (22, 1), (24, 1),
+        (12, 2), (13, 2), (20, 2), (21, 2), (34, 2), (35, 2),
+        (11, 3), (15, 3), (20, 3), (21, 3), (34, 3), (35, 3),
+        (0, 4), (1, 4), (10, 4), (16, 4), (20, 4), (21, 4),
+        (0, 5), (1, 5), (10, 5), (14, 5), (16, 5), (17, 5), (22, 5), (24, 5),
+        (10, 6), (16, 6), (24, 6),
+        (11, 7), (15, 7),
+        (12, 8), (13, 8),
     ];
 
     let patterns: Vec<&[(usize, usize)]> = vec![
-        &glider[..], &block[..], &beacon[..], &blinker[..],
-        &toad[..], &lwss[..], &beehive[..], &pulsar[..],
-        &penta_decathlon[..], &mwss[..],
+        &glider, &block, &beacon, &blinker,
+        &toad, &lwss, &beehive, &pulsar,
+        &penta_decathlon, &mwss,
     ];
 
     let spacing = 14;
@@ -79,9 +87,10 @@ pub fn load_all_patterns(game: &mut GameOfLife) {
             place_scaled(game, pattern, x, y, scale);
         }
     }
+
+    place_scaled(game, &glider_gun, 70, 150, scale);
 }
 
-// Funciones individuales por si las necesitas manualmente
 
 pub fn load_glider(game: &mut GameOfLife, x: usize, y: usize) {
     let pattern = [(1, 0), (2, 1), (0, 2), (1, 2), (2, 2)];
